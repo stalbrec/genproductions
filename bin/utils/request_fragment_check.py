@@ -76,6 +76,10 @@ parser = argparse.ArgumentParser(
                   * [WARNING] Please remove aMCatNLO or POWHEG settings if this is a pure Pythia request.
                   *           If it's not a pure request, in the future, please include madgraph/powheg or amcatnlo
                   *           in the name of the dataset
+<<<<<<< HEAD
+=======
+                  * [WARNING] bornonly = 1 (if (Pythia8PowhegEmissionVetoSettings or SpaceShower:pTmaxMatch or  TimeShower:pTmaxMatch) this becomes an error.
+>>>>>>> d0855a469f1ce6fe39b261a507960d3d2bde1cbd
 
 
                ERRORS:
@@ -143,6 +147,8 @@ parser = argparse.ArgumentParser(
  	    	  *          or pythia8CUEP8M1Settings are overwritten by some other parameters as in CUETP8M2T4
                   * [ERROR] PS weights in config but CMSSW version is < 10_2_3 - please check!
                   * [ERROR] Parton shower weight configuration not OK in the fragment
+                  * [ERROR] You're using MG5_aMC version < 2.6.1 in an Ultra Legacy Campaign. You should use MG5_aMCv2.6.1+
+                  * [ERROR] bornonly = 1 and (Pythia8PowhegEmissionVetoSettings or SpaceShower:pTmaxMatch or  TimeShower:pTmaxMatch)
                                                                                     '''))
 parser.add_argument('--prepid', type=str, help="check mcm requests using prepids", nargs='+')
 parser.add_argument('--ticket', type=str, help="check mcm requests using ticket number", nargs=1)
@@ -735,6 +741,34 @@ for num in range(0,len(prepid)):
                             content2 = f2.read()
                             match = re.search(r"""process=(["']?)([^"']*)\1""", content2)
                             et_flag = 1
+                    if et_flag == 0:        
+                        with open(os.path.join(my_path, pi, "powheg.input")) as f:
+                            bornonly_f = f.read()
+                            bornonly_f = re.sub(r'(?m)^ *#.*\n?', '',bornonly_f)
+                            bornonly = re.findall('bornonly\s+\d+',bornonly_f)
+			    if len(bornonly) != 0: 	
+                                bornonly = int(re.split(r'\s+',bornonly[0])[1])
+                    if et_flag == 1:
+                        with open(os.path.join(my_path, pi, "external_tarball/powheg.input")) as f:
+                            bornonly_f = f.read()
+                            bornonly_f = re.sub(r'(?m)^ *#.*\n?', '',bornonly_f)
+                            bornonly = re.findall('bornonly\s+\d+',bornonly_f)
+                            if len(bornonly) != 0: 
+                                bornonly = int(re.split(r'\s+',bornonly[0])[1])
+                    if bornonly == 1:
+                        bornonly_frag_check = 0
+                        if int(os.popen('grep -c "Pythia8PowhegEmissionVetoSettings" '+pi).read()) == 1:
+                            bornonly_frag_check = 1
+                        if int(os.popen('grep -c "SpaceShower:pTmaxMatch" '+pi).read()) == 1:
+                            bornonly_frag_check = 1
+                        if int(os.popen('grep -c "TimeShower:pTmaxMatch" '+pi).read()) == 1:
+                            bornonly_frag_check = 1
+                        if bornonly_frag_check != 0:
+                            print "* [ERROR] bornonly = 1 and (Pythia8PowhegEmissionVetoSettings or SpaceShower:pTmaxMatch or  TimeShower:pTmaxMatch)" 
+                            error = error + 1
+                        else:    
+                            print "* [WARNING] bornonly = ",bornonly
+                            warning = warning + 1                        
                     if match:
                         process = match.group(2)
                         if process == "gg_H_quark-mass-effects":
@@ -764,7 +798,7 @@ for num in range(0,len(prepid)):
                             if et_flag == 1:
                                 with open(os.path.join(my_path, pi, "external_tarball/powheg.input")) as f:
                                     content = f.read()
-                                    matches = dict((name, re.search(r"^"+name+" *([0-9]+)", content, flags=re.MULTILINE)) for name in desiredvalues)                                
+                                    matches = dict((name, re.search(r"^"+name+" *([0-9]+)", content, flags=re.MULTILINE)) for name in desiredvalues)
                             bad = False
                             for name, match in matches.iteritems():
                                 if match:
@@ -847,9 +881,15 @@ for num in range(0,len(prepid)):
                         mgversion = mgversion_tmp.split()
                         mgversion = mgversion[2].split(".")
                         mgversion_tmp = mgversion_tmp.split("\n")
+<<<<<<< HEAD
                         if "UL" in pi and int(mgversion[0]) <= 2 and int(mgversion[1]) < 6:
                             print"* [WARNING] You're using MG5_aMC "+str(mgversion_tmp[0])+" in an Ultra Legacy Campaign. Are you sure that's what you want?"
                             warning = warning + 1
+=======
+                        if "UL" in pi and int(mgversion[0]) <= 2 and int(mgversion[1]) < 6 and int(mgversion[2]) < 1:
+                            print"* [ERROR] You're using MG5_aMC "+str(mgversion_tmp[0])+" in an Ultra Legacy Campaign. You should use MG5_aMCv2.6.1+"
+                            error = error + 1
+>>>>>>> d0855a469f1ce6fe39b261a507960d3d2bde1cbd
                     test_bw = bw.split() 
                     if float(test_bw[0]) > 15.:
                         print " [WARNING] bwcutoff set to "+str(test_bw[0])+". Note that large bwcutoff values can cause problems in production."
@@ -966,10 +1006,10 @@ for num in range(0,len(prepid)):
                         print "* [ERROR] You run MG5_aMC@NLO at LO but you have  Pythia8aMCatNLOSettings_cfi in fragment"
                         print "*           --> please remove it from the fragment"
                         error = error + 1
-                    if word == "powheg" :
-                        print "* [WARNING] if this is a "+word+" request but loop induced process such as gg->ZH," 
-                        print "*           then fragment is OK (no need to have Pythia8PowhegEmissionVetoSettings)"
-			warning = warning + 1
+#                    if word == "powheg" :
+#                        print "* [WARNING] if this is a "+word+" request but loop induced process such as gg->ZH," 
+#                        print "*           then fragment is OK (no need to have Pythia8PowhegEmissionVetoSettings)"
+#			warning = warning + 1
         if knd == 1 :
              powhegcheck.append(int(os.popen('grep -c -i PowhegEmission '+pi).read()))
              if powhegcheck[0] > 0 :
