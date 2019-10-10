@@ -163,7 +163,7 @@ def parsing (name, link_pdfset):
           #print '!=', myline, generate_process(proc)
 
       #Check if output line in in the card
-      if 'output' in line and  name  in line and '-nojpeg' in line  and not '#' in line:
+      if 'output' in line and  name.split('/')[-1]  in line and '-nojpeg' in line  and not '#' in line:
         outputline+=1
 
       #Check if import model is in the card
