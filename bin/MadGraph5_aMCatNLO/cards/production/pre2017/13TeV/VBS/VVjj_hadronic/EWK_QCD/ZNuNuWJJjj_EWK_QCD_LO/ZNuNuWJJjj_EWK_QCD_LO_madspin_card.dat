@@ -4,6 +4,5 @@ set max_running_process 1
 define vl = ve vm vt
 define vl~ = ve~ vm~ vt~
 decay w- > j j
-decay w- > vl vl~
+decay z > vl vl~
 decay w+ > j j
-decay w+ > vl vl~

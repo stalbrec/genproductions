@@ -6,3 +6,4 @@ define vl~ = ve~ vm~ vt~
 define j = u c d s u~ c~ d~ s~
 decay w- > j j
 decay w+ > j j
+decay z > j j

@@ -3,7 +3,6 @@ set ms_dir ./madspingrid
 set max_running_process 1
 define vl = ve vm vt
 define vl~ = ve~ vm~ vt~
-decay w- > j j
-decay w+ > b b~
+decay z > b b~
 decay w+ > j j
-decay w- > b b~
+decay w- > j j
