@@ -5,3 +5,4 @@ define vl = ve vm vt
 define vl~ = ve~ vm~ vt~
 decay z > vl vl~
 decay z > j j
+launch

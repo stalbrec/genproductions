@@ -4,3 +4,4 @@ set max_running_process 1
 define j = u c d s u~ c~ d~ s~
 decay w- > j j
 decay w+ > j j
+launch

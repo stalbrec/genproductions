@@ -6,3 +6,4 @@ define vl~ = ve~ vm~ vt~
 decay w- > j j
 decay z > vl vl~
 decay w+ > j j
+launch
