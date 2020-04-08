@@ -4,6 +4,6 @@ set loop_optimized_output True
 set complex_mass_scheme False
 import model sm-ckm_no_b_mass
 define p = g u c d s u~ c~ d~ s~
-generate p p > w+ w+ j j QED=4 QCD=0 @ 1
-add process p p > w- w- j j QED=4 QCD=0 @ 2
+generate p p > w+ w+ j j / t t~ h QED=4 QCD=0 @ 1
+add process p p > w- w- j j / t t~ h QED=4 QCD=0 @ 2
 output WJJWJJjj_EWK_LO -nojpeg

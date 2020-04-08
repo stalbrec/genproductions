@@ -4,5 +4,5 @@ set loop_optimized_output True
 set complex_mass_scheme False
 import model sm-ckm_no_b_mass
 define p = g u c d s u~ c~ d~ s~
-generate p p > z z j j QED=2 QCD=99
+generate p p > z z j j / t t~ h QED=2 QCD=99
 output ZNuNuZJJjj_QCD_LO -nojpeg
